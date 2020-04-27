@@ -15,4 +15,18 @@ defmodule KV.RegistryTest do
     KV.Bucket.put(bucket, "milk", 2)
     assert KV.Bucket.get(bucket, "milk") == 2
   end
+
+  test "remove an bucket on exit", %{registry: registry} do
+    KV.Registry.create(registry,  "shopping")
+    {:ok, bucket} = KV.Registry.lookup(registry, "shopping")
+    Agent.stop(bucket)
+    assert KV.Registry.lookup(registry, "shopping") == :error
+  end
+
+  test "remove bucket on crash", %{registry: registry} do
+    KV.Registry.create(registry,  "shopping")
+    {:ok, bucket} = KV.Registry.lookup(registry, "shopping")
+    Agent.stop(bucket, :shutdown)
+    assert KV.Registry.lookup(registry, "shopping") == :error
+  end
 end

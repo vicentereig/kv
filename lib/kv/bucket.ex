@@ -1,5 +1,5 @@
 defmodule KV.Bucket do
-  use Agent
+  use Agent, restart: :temporary
 
   # The agent passes its state to the anonymous function via the
   # `&1` argument when `Agent.get/2` and `Agent.update/2` are called.
